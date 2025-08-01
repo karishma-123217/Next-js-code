@@ -1,0 +1,24 @@
+-- supabase/schema.sql
+
+create type user_tier as enum ('Free', 'Silver', 'Gold', 'Platinum');
+
+create table users (
+  id uuid primary key,
+  email text not null unique,
+  tier user_tier not null default 'Free'
+);
+
+create table events (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  description text,
+  date timestamptz not null,
+  tier user_tier not null
+);
+
+-- Sample data
+insert into events (title, description, date, tier) values
+('Free Workshop', 'Basic access event', now() + interval '1 day', 'Free'),
+('Silver Meetup', 'Intermediate level access', now() + interval '2 days', 'Silver'),
+('Gold Masterclass', 'Advanced content for Gold tier', now() + interval '3 days', 'Gold'),
+('Platinum Summit', 'Exclusive invite-only event', now() + interval '4 days', 'Platinum');
